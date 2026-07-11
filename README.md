@@ -1,2 +1,3 @@
 # aws-java-labs
-Java Aws Labs
+
+A simple project to flex out some Java Aws abilities.
