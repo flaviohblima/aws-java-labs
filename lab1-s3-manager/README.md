@@ -1,6 +1,17 @@
 # lab1-s3-manager
 
-- The goal for this lab was to perform operations from a java cli aplication to a s3 bucket.
+The goal for this lab was to perform operations from a java cli application to a s3 bucket.
+
+## SDK
+
+AWS offers an SDK for every action we need to do in S3. In this lab, I've used the S3Client, S3TransferManager and S3Presigner.
+
+When listing objects, the number of results in a bucket could be too large. To avoid that, we can use the ListObjectsV2Request paginator.
+The logic for pagination is abstracted inside its contents() method, so we can use it without worrying about in what page we are.
+
+Another feature is how the upload is managed. If the file is small (under 8MB), the upload occurs directly. But, if the file size surpasses this threshold, then the upload is performed using multipart file. The Etag that is generated for the file show at the end the number of parts that was needed to perform the entire upload.
+
+And last, but not least, the presign urls that we can generate carries the local permissions with it, and expires after the time we set up. After that time, if the user tries to access the url, it will return a 403 (forbidden).
 
 ## How to test the app
 - Make sure you have `aws` cli installed in your terminal.
