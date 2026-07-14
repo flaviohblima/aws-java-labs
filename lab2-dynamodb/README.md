@@ -62,3 +62,10 @@ Count the items in the table with the query:
 ```bash
 aws dynamodb scan --table-name Lab2Orders --select COUNT  
 ```
+
+## CLEAN UP
+
+Don't forget to clean-up your resources:
+```bash
+aws dynamodb delete-table --table-name Lab2Orders
+```
