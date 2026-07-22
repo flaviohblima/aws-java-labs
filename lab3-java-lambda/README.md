@@ -1,4 +1,4 @@
-# lab1-s3-manager
+# lab3-java-lambda
 
 The goal for this lab was to compare initialization of a java application executed in a Lambda Function before and after configuring the SnapStart.
 
