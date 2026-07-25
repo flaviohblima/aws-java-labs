@@ -4,7 +4,7 @@ curl -s https://start.spring.io/starter.tgz \
   -d bootVersion=4.0.0 \
   -d javaVersion=21 \
   -d groupId=br.com.flaviohblima \
-  -d artifactId=lab5-beanstalk \
-  -d name=lab5-beanstalk \
-  -d dependencies=web,actuator \
+  -d artifactId=lab6-rds \
+  -d name=lab6-rds \
+  -d dependencies=web,actuator,data-jpa,postgresql \
   | tar -xzvf -
