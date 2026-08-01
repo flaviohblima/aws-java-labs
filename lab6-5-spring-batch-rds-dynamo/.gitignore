@@ -1,20 +1,18 @@
-*/target/
-!.mvn/wrapper/maven-wrapper.jar
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.kotlin
 .env
-
-*/bootbatch/
+bootbatch/
 
 ### IntelliJ IDEA ###
-.idea/*
-*/.idea/*
+.idea
 *.iws
 *.iml
 *.ipr
 
-### Eclipse ###
+### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -35,6 +33,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Mac OS ###
-.DS_Store
