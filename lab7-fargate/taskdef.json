@@ -1,0 +1,27 @@
+{
+  "family": "lab7-orders",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role:lab7-task-execution-role",
+  "containerDefinitions": [{
+    "name": "orders",
+    "image": "<REGISTRY>/lab7-orders:v2",
+    "portMappings": [{
+      "containerPort": 8080,
+      "protocol": "tcp"
+    }],
+    "environment": [
+      { "name": "JAVA_TOOL_OPTIONS", "value": "-XX:MaxRAMPercentage=75" }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "/ecs/lab7-orders",
+        "awslogs-region": "<REGION>",
+        "awslogs-stream-prefix": "orders"
+      }
+    }
+  }]
+}
