@@ -4,10 +4,10 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
   "memory": "512",
-  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role:lab7-task-execution-role",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/lab7-task-execution-role",
   "containerDefinitions": [{
     "name": "orders",
-    "image": "<REGISTRY>/lab7-orders:v2",
+    "image": "<REGISTRY>/lab7-orders:v1",
     "portMappings": [{
       "containerPort": 8080,
       "protocol": "tcp"
