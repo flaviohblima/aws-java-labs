@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Appenders>
+        <Lambda name="Lambda">
+            <JsonTemplateLayout eventTemplateUri="classpath:EcsLayout.json" />
+        </Lambda>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Lambda" />
+        </Root>
+    </Loggers>
+</Configuration>

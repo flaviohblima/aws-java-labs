@@ -1,0 +1,7 @@
+customerId,orderId,amount
+cust-100,A-1001,42.50
+cust-100,A-1002,120.00
+cust-200,B-2001,15.90
+THIS ROW IS GARBAGE
+cust-300,C-3001,not-a-number
+cust-200,B-2002,77.30
