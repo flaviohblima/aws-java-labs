@@ -7,11 +7,11 @@
         "Key": {
           "FilterRules": [
             {
-              "name": "prefix",
+              "Name": "prefix",
               "Value": "incoming/"
             },
             {
-              "name": "suffix",
+              "Name": "suffix",
               "Value": ".csv"
             }
           ]

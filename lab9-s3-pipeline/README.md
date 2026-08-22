@@ -20,7 +20,7 @@ aws dynamodb create-table \
   --table-name OrderDocuments \
   --attribute-definitions \
     AttributeName=customerId,AttributeType=S \
-    AttributeName=sk,AttributeTypeS \
+    AttributeName=sk,AttributeType=S \
   --key-schema \
     AttributeName=customerId,KeyType=HASH \
     AttributeName=sk,KeyType=RANGE \
@@ -33,7 +33,7 @@ aws dynamodb create-table \
 FAIL_Q_URL=$(aws sqs create-queue --queue-name lab9-failed-events \
   --query 'QueueUrl' --output text)
 FAIL_Q_ARN=$(aws sqs get-queue-attributes --queue-url $FAIL_Q_URL \
-  --attribute-names QueueArn --query 'Attributes,QueueArn' --output text)
+  --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
 ```
 
 ### Create the Lambda function Role
@@ -49,7 +49,7 @@ sed -i 's/<BUCKET>/'${BUCKET}'/g' policy.json
 sed -i 's/<FAIL_Q_ARN>/'${FAIL_Q_ARN}'/g' policy.json
 
 aws iam put-role-policy --role-name lab9-lambda-role \
-  --policy-name lab9-access --policy-document file:://policy.json
+  --policy-name lab9-access --policy-document file://policy.json
 
 ROLE_ARN=$(aws iam get-role --role-name lab9-lambda-role \
   --query 'Role.Arn' --output text)
@@ -77,9 +77,9 @@ aws lambda create-function \
 ```shell
 aws lambda wait function-active --function-name lab9-csv-ingest
 
-aws lambda put-function-event-inkoke-config \
+aws lambda put-function-event-invoke-config \
   --function-name lab9-csv-ingest \
-  --maximun-retry-attempts 2 \
+  --maximum-retry-attempts 2 \
   --destination-config "{\"OnFailure\":{\"Destination\":\"$FAIL_Q_ARN\"}}"
 ```
 
@@ -94,7 +94,7 @@ aws lambda add-permission \
   --source-arn arn:aws:s3:::${BUCKET} \
   --source-account $ACCOUNT_ID
   
-FN_ARN=$(aws lambda get-function --function-name lab9.csv-ingest \
+FN_ARN=$(aws lambda get-function --function-name lab9-csv-ingest \
   --query 'Configuration.FunctionArn' --output text)
 
 sed -i 's/<FN_ARN>/'${FN_ARN}'/g' notification.json
@@ -131,7 +131,7 @@ sed -i 's/<BUCKET>/'${BUCKET}'/g' error-policy.json
 sed -i 's/<FAIL_Q_ARN>/'${FAIL_Q_ARN}'/g' error-policy.json
 
 aws iam put-role-policy --role-name lab9-lambda-role \
-  --policy-name lab9-access --policy-document file:://error-policy.json
+  --policy-name lab9-access --policy-document file://error-policy.json
 ```
 
 Uploading the file with another name:
@@ -142,6 +142,12 @@ aws s3 cp orders.csv s3://$BUCKET/incoming/orders2.csv
 Then watch two retries in the logs. After that, we can read the failed invocation event in the failure queue:
 ```shell
 aws sqs receive-message --queue-url $FAIL_Q_URL --query 'Messages[0].Body'
+```
+
+To fix that sending, you can set up the correct policy, and then just replace the file with this command:
+```shell
+aws s3 cp s3://$BUCKET/incoming/orders2.csv s3://$BUCKET/incoming/orders2.csv \
+  --metadata-directive REPLACE --metadata replayed=true
 ```
 
 ## Clean Up
@@ -157,8 +163,8 @@ aws dynamodb delete-table --table-name OrderDocuments
 aws sqs delete-queue --queue-url $FAIL_Q_URL
 
 aws iam delete-role-policy --role-name lab9-lambda-role --policy-name lab9-access
-aws iam delete-role-policy --role-name lab9-lambda-role \ 
-  --policy-arn arn:aws:iam::aws:policy/service-role/AwsLambdaBasicExecutionRole
+aws iam detach-role-policy --role-name lab9-lambda-role \
+  --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 aws iam delete-role --role-name lab9-lambda-role
 
 aws logs delete-log-group --log-group-name /aws/lambda/lab9-csv-ingest
